@@ -1,0 +1,80 @@
+--Hieu nang cua create INDEX
+--Khong su dung INDEX
+DECLARE @TEST_PLAYER TABLE (ID int, MOST_PLAYER_ID int)
+DECLARE @Start int
+DECLARE @End int
+DECLARE @i datetime
+DECLARE @e datetime
+SET @Start = 1
+SET @End = 10000
+
+WHILE (@Start < @End)
+	BEGIN
+		INSERT INTO @TEST_PLAYER
+		SELECT @Start, @Start + 1000
+		SET @Start = @Start + 1
+	END
+SET @i = GETDATE()
+SELECT * FROM @TEST_PLAYER
+SET @e = GETDATE()
+
+SELECT DATEDIFF(MILLISECOND,@i,@e)
+--253
+
+--su dung index
+DECLARE @TEST_PLAYER TABLE(ID int INDEX Ix CLUSTERED, MOST_PLAYER_ID int)
+DECLARE @Start int
+DECLARE @End int
+DECLARE @i datetime
+DECLARE @e datetime
+SET @Start = 1
+SET @End = 10000
+WHILE (@Start < @End)
+BEGIN
+	INSERT INTO @TEST_PLAYER
+	SELECT @Start, @Start + 1000
+	SET @Start = @Start + 1
+END
+SET @i = GETDATE()
+SELECT * FROM @TEST_PLAYER
+SET @e = GETDATE()
+SELECT DATEDIFF(MILLISECOND,@i,@e)
+--253
+DROP TABLE ##TEST_PLAYER
+CREATE TABLE ##TEST_PLAYER(ID int INDEX Ix NONCLUSTERED, MOST_PLAYER_ID int)
+DECLARE @Start int
+DECLARE @End int
+DECLARE @i datetime
+DECLARE @e datetime
+SET @Start = 1
+SET @End = 100000
+WHILE (@Start < @End)
+BEGIN
+	INSERT INTO ##TEST_PLAYER
+	SELECT @Start, @Start + 1000
+	SET @Start = @Start + 1
+END
+SET @i = GETDATE()
+SELECT * FROM ##TEST_PLAYER
+SET @e = GETDATE()
+SELECT DATEDIFF(MILLISECOND,@i,@e)
+--1893
+DROP TABLE ##TEST_PLAYER
+CREATE TABLE ##TEST_PLAYER(ID int,MOST_PLAYER_ID int)
+DECLARE @Start int
+DECLARE @End int
+DECLARE @i datetime
+DECLARE @e datetime
+SET @Start = 1
+SET @End = 100000
+WHILE (@Start < @End)
+BEGIN
+	INSERT INTO ##TEST_PLAYER
+	SELECT @Start, @Start + 1000
+	SET @Start = @Start + 1
+END
+SET @i = GETDATE()
+SELECT * FROM ##TEST_PLAYER
+SET @e = GETDATE()
+SELECT DATEDIFF(MILLISECOND,@i,@e)
+--1916

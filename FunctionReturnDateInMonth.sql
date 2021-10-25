@@ -1,0 +1,12 @@
+﻿CREATE FUNCTION dbo.DateInMonth(@Date VARCHAR(32))
+RETURNS INT
+WITH EXECUTE AS CALLER
+AS
+BEGIN
+	DECLARE @StartDateMonth VARCHAR(32)
+	DECLARE @Day INT
+	SET @StartDateMonth = LEFT(@Date,6) + '01'
+	SET @Day = DATEDIFF(DAY,@StartDateMonth, @Date)
+	RETURN(@Day)
+END
+--SELECT dbo.DateInMonth('20170131')
